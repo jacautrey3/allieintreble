@@ -13,7 +13,7 @@ from botocore.exceptions import ClientError
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-ses = boto3.client("ses")
+ses = boto3.client("ses", region_name=os.environ.get("SES_REGION", "us-east-1"))
 
 NOTIFICATION_EMAIL = os.environ["NOTIFICATION_EMAIL"]
 FROM_EMAIL         = os.environ["FROM_EMAIL"]

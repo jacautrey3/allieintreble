@@ -12,7 +12,7 @@ terraform {
   }
 }
 
-# Primary region (Lambda, API GW, SES)
+# Primary region (Lambda, API Gateway) — us-west-1
 provider "aws" {
   region = var.aws_region
 }
@@ -23,16 +23,24 @@ provider "aws" {
   region = "us-east-1"
 }
 
+# SES is not available in us-west-1; us-east-1 is used instead
+provider "aws" {
+  alias  = "ses"
+  region = var.ses_region
+}
+
 # ============================================================
 # S3 — Static Website Hosting
 # ============================================================
 
 resource "aws_s3_bucket" "website" {
-  bucket = var.domain_name
+  provider = aws.us_east_1
+  bucket   = var.domain_name
 }
 
 resource "aws_s3_bucket_public_access_block" "website" {
-  bucket = aws_s3_bucket.website.id
+  provider = aws.us_east_1
+  bucket   = aws_s3_bucket.website.id
 
   block_public_acls       = false
   block_public_policy     = false
@@ -41,14 +49,16 @@ resource "aws_s3_bucket_public_access_block" "website" {
 }
 
 resource "aws_s3_bucket_website_configuration" "website" {
-  bucket = aws_s3_bucket.website.id
+  provider = aws.us_east_1
+  bucket   = aws_s3_bucket.website.id
 
   index_document { suffix = "index.html" }
   error_document { key    = "index.html" }
 }
 
 resource "aws_s3_bucket_policy" "website" {
-  bucket = aws_s3_bucket.website.id
+  provider = aws.us_east_1
+  bucket   = aws_s3_bucket.website.id
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -199,7 +209,68 @@ resource "aws_cloudfront_distribution" "website" {
 # ============================================================
 
 resource "aws_ses_email_identity" "notification" {
-  email = var.notification_email
+  provider = aws.ses
+  email    = var.notification_email
+}
+
+# ============================================================
+# IAM — GitHub Actions OIDC (no long-term access keys needed)
+# ============================================================
+
+resource "aws_iam_openid_connect_provider" "github" {
+  url             = "https://token.actions.githubusercontent.com"
+  client_id_list  = ["sts.amazonaws.com"]
+  # Thumbprints are verified by AWS automatically; listing both known values for safety
+  thumbprint_list = [
+    "6938fd4d98bab03faadb97b34396831e3780aea1",
+    "1c58a3a8518e8759bf075b76b750d4f2df264fcd",
+  ]
+}
+
+resource "aws_iam_role" "github_actions" {
+  name = "allieintreble-github-actions"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Federated = aws_iam_openid_connect_provider.github.arn }
+      Action    = "sts:AssumeRoleWithWebIdentity"
+      Condition = {
+        StringEquals = {
+          "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
+        }
+        StringLike = {
+          # Only the main branch of this specific repo can assume this role
+          "token.actions.githubusercontent.com:sub" = "repo:${var.github_repo}:ref:refs/heads/main"
+        }
+      }
+    }]
+  })
+}
+
+resource "aws_iam_role_policy" "github_actions_deploy" {
+  name = "deploy"
+  role = aws_iam_role.github_actions.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = ["s3:PutObject", "s3:DeleteObject", "s3:ListBucket"]
+        Resource = [
+          aws_s3_bucket.website.arn,
+          "${aws_s3_bucket.website.arn}/*",
+        ]
+      },
+      {
+        Effect   = "Allow"
+        Action   = "cloudfront:CreateInvalidation"
+        Resource = aws_cloudfront_distribution.website.arn
+      },
+    ]
+  })
 }
 
 # ============================================================
@@ -261,6 +332,7 @@ resource "aws_lambda_function" "inquiry" {
     variables = {
       NOTIFICATION_EMAIL = var.notification_email
       FROM_EMAIL         = var.notification_email
+      SES_REGION         = var.ses_region
     }
   }
 }

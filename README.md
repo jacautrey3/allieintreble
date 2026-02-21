@@ -53,10 +53,21 @@ Terraform will output several values when it finishes — **save them**.
 
 | Output | What to do with it |
 |--------|-------------------|
-| `route53_nameservers` | Copy all 4 into your domain registrar's NS settings |
+| `route53_nameservers` | Copy all 4 into Squarespace's custom nameserver settings (see below) |
+| `github_actions_role_arn` | Add as `AWS_ROLE_ARN` GitHub secret |
 | `api_gateway_url` | Add as `API_GATEWAY_URL` GitHub secret |
 | `s3_bucket_name` | Add as `S3_BUCKET_NAME` GitHub secret |
 | `cloudfront_distribution_id` | Add as `CLOUDFRONT_DISTRIBUTION_ID` GitHub secret |
+
+#### Pointing Squarespace to Route 53
+
+The domain is registered through Squarespace but DNS is managed by Route 53. After `terraform apply` outputs the nameservers:
+
+1. Log in to Squarespace → **Domains**
+2. Click **allieintreble.com** → **DNS Settings**
+3. Scroll to **Nameservers** → select **Use custom nameservers**
+4. Replace the existing nameservers with the 4 values from Terraform (e.g. `ns-123.awsdns-45.com`)
+5. Save — propagation typically takes 15 minutes to a few hours
 
 > **Note:** ACM certificate validation can take 5–30 minutes after the nameservers propagate.
 
@@ -72,11 +83,12 @@ Go to your repo → **Settings → Secrets and variables → Actions → New rep
 
 | Secret name | Value |
 |-------------|-------|
-| `AWS_ACCESS_KEY_ID` | Your IAM user's access key |
-| `AWS_SECRET_ACCESS_KEY` | Your IAM user's secret key |
-| `S3_BUCKET_NAME` | From Terraform output |
-| `CLOUDFRONT_DISTRIBUTION_ID` | From Terraform output |
-| `API_GATEWAY_URL` | From Terraform output (full URL, e.g. `https://abc123.execute-api.us-east-1.amazonaws.com/prod`) |
+| `AWS_ROLE_ARN` | From Terraform output `github_actions_role_arn` |
+| `S3_BUCKET_NAME` | From Terraform output `s3_bucket_name` |
+| `CLOUDFRONT_DISTRIBUTION_ID` | From Terraform output `cloudfront_distribution_id` |
+| `API_GATEWAY_URL` | From Terraform output `api_gateway_url` |
+
+No AWS access keys are stored — GitHub Actions uses OIDC to assume the IAM role directly.
 
 ### 5. Push to main
 

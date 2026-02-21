@@ -1,3 +1,8 @@
+output "github_actions_role_arn" {
+  description = "Add this as the AWS_ROLE_ARN GitHub secret — no access keys needed"
+  value       = aws_iam_role.github_actions.arn
+}
+
 output "s3_bucket_name" {
   description = "S3 bucket that hosts the static site"
   value       = aws_s3_bucket.website.bucket

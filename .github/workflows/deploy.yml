@@ -10,16 +10,20 @@ jobs:
     name: Sync site to S3 & invalidate CloudFront
     runs-on: ubuntu-latest
 
+    # Required for OIDC token exchange with AWS — no long-term keys stored
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Configure AWS credentials
+      - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region:            us-east-1
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region:     us-east-1
 
       # Inject the API Gateway URL into main.js before uploading
       - name: Inject API Gateway URL

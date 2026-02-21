@@ -27,8 +27,11 @@ jobs:
 
       # Inject the API Gateway URL into main.js before uploading
       - name: Inject API Gateway URL
+        env:
+          API_GATEWAY_URL: ${{ secrets.API_GATEWAY_URL }}
         run: |
-          sed -i "s|REPLACE_WITH_API_GATEWAY_URL|${{ secrets.API_GATEWAY_URL }}|g" src/js/main.js
+          clean_url=$(echo "${API_GATEWAY_URL}" | tr -d '\n\r')
+          sed -i "s|REPLACE_WITH_API_GATEWAY_URL|${clean_url}|g" src/js/main.js
 
       - name: Sync site files to S3
         run: |

@@ -1,0 +1,49 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:  # allow manual trigger from GitHub UI
+
+jobs:
+  deploy:
+    name: Sync site to S3 & invalidate CloudFront
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region:            us-east-1
+
+      # Inject the API Gateway URL into main.js before uploading
+      - name: Inject API Gateway URL
+        run: |
+          sed -i "s|REPLACE_WITH_API_GATEWAY_URL|${{ secrets.API_GATEWAY_URL }}|g" src/js/main.js
+
+      - name: Sync site files to S3
+        run: |
+          aws s3 sync src/ s3://${{ secrets.S3_BUCKET_NAME }} \
+            --delete \
+            --cache-control "public, max-age=3600, must-revalidate"
+
+      # Give HTML files a shorter TTL so content updates propagate quickly
+      - name: Set no-cache on HTML files
+        run: |
+          aws s3 cp src/index.html   s3://${{ secrets.S3_BUCKET_NAME }}/index.html \
+            --cache-control "no-cache, no-store, must-revalidate" \
+            --content-type "text/html"
+          aws s3 cp src/inquiry.html s3://${{ secrets.S3_BUCKET_NAME }}/inquiry.html \
+            --cache-control "no-cache, no-store, must-revalidate" \
+            --content-type "text/html"
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"

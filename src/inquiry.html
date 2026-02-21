@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book a Lesson | Allie in Treble</title>
+  <meta name="description" content="Reach out to Allie to book your first singing lesson. Fill out the short inquiry form and she'll be in touch.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-container">
+      <a href="/" class="nav-logo">Allie in Treble</a>
+      <ul class="nav-links">
+        <li><a href="/#about">About</a></li>
+        <li><a href="/#lessons">Lessons</a></li>
+        <li><a href="/#testimonials">Testimonials</a></li>
+        <li><a href="inquiry.html" class="nav-cta">Book a Lesson</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Inquiry Form -->
+  <section class="inquiry-section">
+    <div class="container container-narrow">
+      <p class="section-label">Let&rsquo;s Connect</p>
+      <h1 class="inquiry-title">Book a Lesson</h1>
+      <p class="inquiry-subtitle">Tell Allie a bit about yourself and your goals. She&rsquo;ll be in touch to schedule your first lesson.</p>
+
+      <form class="inquiry-form" id="inquiryForm" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Your Name <span class="required">*</span></label>
+            <input type="text" id="name" name="name" required autocomplete="name" placeholder="Jane Smith">
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address <span class="required">*</span></label>
+            <input type="email" id="email" name="email" required autocomplete="email" placeholder="jane@example.com">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="(555) 123-4567">
+          </div>
+          <div class="form-group">
+            <label for="level">Experience Level</label>
+            <select id="level" name="level">
+              <option value="">Select your level</option>
+              <option value="beginner">Beginner &mdash; just starting out</option>
+              <option value="intermediate">Intermediate &mdash; some experience</option>
+              <option value="advanced">Advanced &mdash; looking to refine</option>
+              <option value="unsure">Not sure yet</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="message">Tell Allie about your goals <span class="required">*</span></label>
+          <textarea id="message" name="message" required rows="5" placeholder="What brings you here? Any songs you've been dying to sing, a performance you're preparing for, or simply a love of music you want to explore?"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-large btn-full" id="submitBtn">
+          Send Inquiry
+        </button>
+      </form>
+
+      <!-- Success state -->
+      <div class="form-success" id="formSuccess" hidden>
+        <div class="success-icon">&#10003;</div>
+        <h2>Message Received!</h2>
+        <p>Thanks for reaching out. Allie will be in touch shortly to set up your first lesson.</p>
+        <a href="/" class="btn btn-secondary">Back to Home</a>
+      </div>
+
+      <!-- Error state -->
+      <div class="form-error" id="formError" hidden>
+        <p>Something went wrong &mdash; please try again or email Allie directly at <a href="mailto:allisontaylor@gmail.com">allisontaylor@gmail.com</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-logo">Allie in Treble</p>
+      <p class="footer-copy">&copy; 2026 Allie in Treble. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

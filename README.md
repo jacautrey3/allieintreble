@@ -73,7 +73,7 @@ The domain is registered through Squarespace but DNS is managed by Route 53. Aft
 
 ### 3. Verify your SES email
 
-AWS will send a verification email to `allisontaylor@gmail.com`. Click the link inside it. **The inquiry form will not work until this step is complete.**
+AWS will send a verification email to `allievtaylor@gmail.com`. Click the link inside it. **The inquiry form will not work until this step is complete.**
 
 > SES accounts start in *sandbox mode*, which only allows sending to verified addresses. To go live, [request production access](https://docs.aws.amazon.com/ses/latest/dg/request-production-access.html) in the AWS console (takes 24–48 hours and is free).
 

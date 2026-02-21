@@ -32,11 +32,12 @@ def handler(event, context):
 
     try:
         body    = json.loads(event.get("body") or "{}")
-        name    = body.get("name",    "Unknown").strip()
-        email   = body.get("email",   "").strip()
-        phone   = body.get("phone",   "Not provided").strip() or "Not provided"
-        level   = body.get("level",   "Not specified").strip() or "Not specified"
-        message = body.get("message", "").strip()
+        name     = body.get("name",     "Unknown").strip()
+        email    = body.get("email",    "").strip()
+        phone    = body.get("phone",    "Not provided").strip() or "Not provided"
+        level    = body.get("level",    "Not specified").strip() or "Not specified"
+        duration = body.get("duration", "Not specified").strip() or "Not specified"
+        message  = body.get("message",  "").strip()
 
         if not name or not email or not message:
             return {
@@ -51,7 +52,8 @@ def handler(event, context):
             f"Name:              {name}\n"
             f"Email:             {email}\n"
             f"Phone:             {phone}\n"
-            f"Experience Level:  {level}\n\n"
+            f"Experience Level:  {level}\n"
+            f"Lesson Length:     {duration}\n\n"
             f"Message:\n{message}\n\n"
             f"{'=' * 48}\n"
             f"Reply directly to {email} to respond."

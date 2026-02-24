@@ -4,16 +4,16 @@
 
 /* ---------- Custom Properties ---------- */
 :root {
-  --color-primary:      #7c3aed;
-  --color-primary-dark: #5b21b6;
-  --color-primary-light:#ede9fe;
+  --color-primary:      #800020;
+  --color-primary-dark: #5c0016;
+  --color-primary-light:#fde8ec;
   --color-accent:       #d97706;
   --color-accent-light: #fef3c7;
-  --color-bg:           #fdf8ff;
+  --color-bg:           #faf8fd;
   --color-surface:      #ffffff;
   --color-text:         #1c1917;
   --color-text-muted:   #78716c;
-  --color-border:       #e5d5f5;
+  --color-border:       #f0d5da;
 
   --font-heading: 'Playfair Display', Georgia, serif;
   --font-body:    'Inter', system-ui, sans-serif;
@@ -24,7 +24,7 @@
 
   --shadow-sm:  0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
   --shadow-md:  0 4px 12px rgba(0,0,0,.10), 0 2px 4px rgba(0,0,0,.06);
-  --shadow-lg:  0 20px 40px rgba(124,58,237,.12);
+  --shadow-lg:  0 20px 40px rgba(128,0,32,.12);
 
   --transition: 200ms ease;
   --max-width:  1100px;
@@ -94,7 +94,7 @@ h1, h2, h3 {
 .btn-primary:hover {
   background: var(--color-primary-dark);
   border-color: var(--color-primary-dark);
-  box-shadow: 0 6px 20px rgba(124,58,237,.35);
+  box-shadow: 0 6px 20px rgba(128,0,32,.35);
 }
 
 .btn-secondary {
@@ -274,7 +274,7 @@ h1, h2, h3 {
    About
    ============================================================ */
 .about {
-  background: var(--color-surface);
+  background: var(--color-bg);
   padding: 6rem 0;
 }
 
@@ -495,20 +495,33 @@ h1, h2, h3 {
    ============================================================ */
 .cta-section {
   padding: 6rem 0;
-  background: var(--color-surface);
+  background: var(--color-primary);
   text-align: center;
 }
 
 .cta-section h2 {
   font-size: clamp(1.75rem, 4vw, 2.5rem);
   margin-bottom: 1rem;
+  color: #fff;
 }
 
 .cta-section p {
-  color: var(--color-text-muted);
+  color: rgba(255,255,255,.75);
   max-width: 480px;
   margin: 0 auto 2rem;
   font-size: 1.0625rem;
+}
+
+.cta-section .btn-primary {
+  background: #fff;
+  color: var(--color-primary);
+  border-color: #fff;
+}
+
+.cta-section .btn-primary:hover {
+  background: rgba(255,255,255,.88);
+  border-color: rgba(255,255,255,.88);
+  box-shadow: 0 6px 20px rgba(0,0,0,.2);
 }
 
 /* ============================================================
@@ -516,24 +529,22 @@ h1, h2, h3 {
    ============================================================ */
 .footer {
   background: var(--color-text);
-  color: rgba(255,255,255,.55);
-  padding: 3rem 0;
+  color: rgba(255,255,255,.45);
+  padding: .875rem 0;
   text-align: center;
 }
 
 .footer-logo {
   font-family: var(--font-heading);
-  font-size: 1.375rem;
-  color: #fff;
-  margin-bottom: .25rem;
+  font-size: .9375rem;
+  color: rgba(255,255,255,.75);
+  display: inline;
+  margin-right: .5rem;
 }
 
-.footer-tagline {
-  font-size: .875rem;
-  margin-bottom: .75rem;
-}
+.footer-tagline { display: none; }
 
-.footer-copy { font-size: .8125rem; }
+.footer-copy { font-size: .75rem; }
 
 /* ============================================================
    Inquiry Page
@@ -604,7 +615,7 @@ h1, h2, h3 {
 .form-group select:focus,
 .form-group textarea:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(124,58,237,.15);
+  box-shadow: 0 0 0 3px rgba(128,0,32,.15);
 }
 
 .form-group textarea { resize: vertical; min-height: 130px; }

@@ -285,18 +285,11 @@ h1, h2, h3 {
   align-items: center;
 }
 
-.about-image-placeholder {
+.about-image img {
+  width: 100%;
   aspect-ratio: 4/5;
+  object-fit: cover;
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--color-primary-light), var(--color-accent-light));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: var(--color-primary);
-  font-size: .875rem;
-  font-weight: 500;
-  line-height: 1.5;
   box-shadow: var(--shadow-lg);
 }
 
@@ -715,8 +708,6 @@ h1, h2, h3 {
     grid-template-columns: 1fr;
     gap: 2.5rem;
   }
-
-  .about-image-placeholder { aspect-ratio: 16/9; }
 
   /* Pricing */
   .pricing-grid { grid-template-columns: 1fr; }

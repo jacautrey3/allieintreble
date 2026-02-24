@@ -22,5 +22,8 @@ lambda/*.zip
 # Node (if any tooling is added later)
 node_modules/
 
+# Photos (uploaded directly to S3, not tracked in git)
+photos/
+
 # Claude Code local settings
 .claude/

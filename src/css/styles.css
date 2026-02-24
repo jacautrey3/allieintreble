@@ -326,7 +326,7 @@ h1, h2, h3 {
    Lessons
    ============================================================ */
 .lessons {
-  padding: 6rem 0;
+  padding: 0 0 6rem;
   background: var(--color-bg);
 }
 
@@ -339,7 +339,12 @@ h1, h2, h3 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
-  margin: 3rem 0 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.pricing-heading {
+  margin-top: 3rem;
+  text-align: center;
 }
 
 .pricing-cta {

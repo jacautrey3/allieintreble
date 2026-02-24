@@ -37,6 +37,7 @@ jobs:
         run: |
           aws s3 sync src/ s3://${{ secrets.S3_BUCKET_NAME }} \
             --delete \
+            --exclude "images/*" \
             --cache-control "public, max-age=3600, must-revalidate"
 
       # Give HTML files a shorter TTL so content updates propagate quickly.

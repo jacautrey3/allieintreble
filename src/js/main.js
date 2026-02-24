@@ -32,6 +32,22 @@ if (inquiryForm) {
     // Reset error state
     formError.hidden = true;
 
+    // Rate limiting
+    const now = Date.now();
+    const today = new Date().toDateString();
+    const rl = JSON.parse(localStorage.getItem('inquiryRL') || '{}');
+
+    if (now - (rl.lastAt || 0) < 60 * 1000) {
+      formError.querySelector('p').textContent = 'Please wait a minute before submitting again.';
+      formError.hidden = false;
+      return;
+    }
+    if (rl.date === today && (rl.count || 0) >= 10) {
+      formError.querySelector('p').textContent = 'You\u2019ve reached the daily inquiry limit. Please email Allie directly if you need to reach her today.';
+      formError.hidden = false;
+      return;
+    }
+
     const emailValue = document.getElementById('email').value.trim();
     const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
     if (!emailValid) {
@@ -64,6 +80,15 @@ if (inquiryForm) {
       // Show success
       inquiryForm.hidden   = true;
       formSuccess.hidden   = false;
+
+      // Save rate-limit state
+      const today2 = new Date().toDateString();
+      const rl2 = JSON.parse(localStorage.getItem('inquiryRL') || '{}');
+      localStorage.setItem('inquiryRL', JSON.stringify({
+        date:   today2,
+        count:  rl2.date === today2 ? (rl2.count || 0) + 1 : 1,
+        lastAt: Date.now(),
+      }));
 
     } catch (err) {
       console.error('Inquiry submission failed:', err);

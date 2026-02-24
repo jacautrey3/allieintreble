@@ -441,6 +441,17 @@ resource "aws_api_gateway_stage" "prod" {
   stage_name    = "prod"
 }
 
+resource "aws_api_gateway_method_settings" "post_throttle" {
+  rest_api_id = aws_api_gateway_rest_api.inquiry.id
+  stage_name  = aws_api_gateway_stage.prod.stage_name
+  method_path = "inquiry/POST"
+
+  settings {
+    throttling_burst_limit = 5  # max burst across all users
+    throttling_rate_limit  = 1  # sustained 1 req/sec
+  }
+}
+
 # --- Allow API GW to invoke Lambda ---
 
 resource "aws_lambda_permission" "apigw" {

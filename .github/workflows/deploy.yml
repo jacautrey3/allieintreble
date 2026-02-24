@@ -41,16 +41,20 @@ jobs:
             --cache-control "public, max-age=3600, must-revalidate"
 
       # Give HTML files a shorter TTL so content updates propagate quickly.
-      # inquiry.html is served at /inquiry (no extension) so browsers show a clean URL.
+      # Pages are served without extensions (/about, /inquiry) for clean URLs.
       - name: Set no-cache on HTML files
         run: |
           aws s3 cp src/index.html s3://${{ secrets.S3_BUCKET_NAME }}/index.html \
             --cache-control "no-cache, no-store, must-revalidate" \
             --content-type "text/html"
-          aws s3 cp src/inquiry.html s3://${{ secrets.S3_BUCKET_NAME }}/inquiry \
+          aws s3 cp src/about/index.html s3://${{ secrets.S3_BUCKET_NAME }}/about \
             --cache-control "no-cache, no-store, must-revalidate" \
             --content-type "text/html"
-          aws s3 rm s3://${{ secrets.S3_BUCKET_NAME }}/inquiry.html
+          aws s3 cp src/inquiry/index.html s3://${{ secrets.S3_BUCKET_NAME }}/inquiry \
+            --cache-control "no-cache, no-store, must-revalidate" \
+            --content-type "text/html"
+          aws s3 rm s3://${{ secrets.S3_BUCKET_NAME }}/about/index.html || true
+          aws s3 rm s3://${{ secrets.S3_BUCKET_NAME }}/inquiry/index.html || true
 
       - name: Invalidate CloudFront cache
         run: |

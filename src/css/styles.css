@@ -278,11 +278,15 @@ h1, h2, h3 {
   padding: 6rem 0;
 }
 
+.about > .container {
+  max-width: 1300px;
+}
+
 .about-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 3fr;
   gap: 5rem;
-  align-items: center;
+  align-items: start;
 }
 
 .about-image img {
